@@ -13,14 +13,14 @@ async function main() {
     const stoic_collection = db.collection("stoic");
     const enfp_collection = db.collection("enfp");
     await zen_collection.deleteMany({});
-    await stoic_collection.deleteMany({});
-    await enfp_collection.deleteMany({});
+    // await stoic_collection.deleteMany({});
+    // await enfp_collection.deleteMany({});
     zen_quotes = filter_quotes(zen_quotes);
-    stoic_quotes = filter_quotes(stoic_quotes);
-    enfp_quotes = filter_quotes(enfp_quotes);
+    // stoic_quotes = filter_quotes(stoic_quotes);
+    // enfp_quotes = filter_quotes(enfp_quotes);
     await upload_quotes(zen_collection, zen_quotes);
-    await upload_quotes(stoic_collection, stoic_quotes);
-    await upload_quotes(enfp_collection, enfp_quotes);
+    // await upload_quotes(stoic_collection, stoic_quotes);
+    // await upload_quotes(enfp_collection, enfp_quotes);
     client.close();
     process.exit();
 }
