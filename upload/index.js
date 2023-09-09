@@ -12,26 +12,15 @@ async function main() {
     const zen_collection = db.collection("zen");
     const stoic_collection = db.collection("stoic");
     const enfp_collection = db.collection("enfp");
-    // await enfp_collection.deleteMany({});
-    var authors = {};
-    console.log(zen_quotes.length);
-    // zen_quotes = filter_quotes(zen_quotes);
-    // stoic_quotes = filter_quotes(stoic_quotes);
+    await zen_collection.deleteMany({});
+    await stoic_collection.deleteMany({});
+    await enfp_collection.deleteMany({});
+    zen_quotes = filter_quotes(zen_quotes);
+    stoic_quotes = filter_quotes(stoic_quotes);
     enfp_quotes = filter_quotes(enfp_quotes);
-    console.log(enfp_quotes.length);
-    enfp_quotes.forEach(obj => {
-        if (obj.author in authors) {
-            authors[obj.author] += 1;
-        } else {
-            authors[obj.author] = 1;
-        }
-    });
-    const keyValueArray = Object.entries(authors);
-    keyValueArray.sort((a, b) => a[1] - b[1]);
-    authors = Object.fromEntries(keyValueArray);
-    console.log(authors);
-    // await upload_quotes(zen_collection, zen_quotes);
-    // await upload_quotes(stoic_collection, stoic_quotes);
+    await upload_quotes(zen_collection, zen_quotes);
+    await upload_quotes(stoic_collection, stoic_quotes);
+    await upload_quotes(enfp_collection, enfp_quotes);
     client.close();
     process.exit();
 }
@@ -49,6 +38,21 @@ async function upload_quotes(collection, quotes) {
         await collection.insertOne(quotes[i]);
         console.log("Quotes", quotes.length-1, ":", i);
     }
+}
+
+function print_authors(quotes) {
+    var authors = {};
+    quotes.forEach(obj => {
+        if (obj.author in authors) {
+            authors[obj.author] += 1;
+        } else {
+            authors[obj.author] = 1;
+        }
+    });
+    const keyValueArray = Object.entries(authors);
+    keyValueArray.sort((a, b) => a[1] - b[1]);
+    authors = Object.fromEntries(keyValueArray);
+    console.log(authors);
 }
 
 main();
