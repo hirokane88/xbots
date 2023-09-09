@@ -13,14 +13,16 @@ async function main() {
     const stoic_collection = db.collection("stoic");
     const enfp_collection = db.collection("enfp");
     await zen_collection.deleteMany({});
-    // await stoic_collection.deleteMany({});
-    // await enfp_collection.deleteMany({});
+    await stoic_collection.deleteMany({});
+    await enfp_collection.deleteMany({});
     zen_quotes = filter_quotes(zen_quotes);
-    // stoic_quotes = filter_quotes(stoic_quotes);
-    // enfp_quotes = filter_quotes(enfp_quotes);
+    stoic_quotes = filter_quotes(stoic_quotes);
+    enfp_quotes = filter_quotes(enfp_quotes);
     await upload_quotes(zen_collection, zen_quotes);
-    // await upload_quotes(stoic_collection, stoic_quotes);
-    // await upload_quotes(enfp_collection, enfp_quotes);
+    await upload_quotes(stoic_collection, stoic_quotes);
+    await upload_quotes(enfp_collection, enfp_quotes);
+    // print_quotes(stoic_quotes);
+    // print_authors(stoic_quotes);
     client.close();
     process.exit();
 }
@@ -40,11 +42,18 @@ async function upload_quotes(collection, quotes) {
     }
 }
 
+async function print_quotes(quotes) {
+    quotes.forEach(obj => {
+        const quote = obj.quote.replace(/\n/g, ' ') + "";
+        console.log('"' + quote + '" ~', obj.author, "#zen\n");
+    })
+}
+
 function print_authors(quotes) {
     var authors = {};
     quotes.forEach(obj => {
         if (obj.author in authors) {
-            authors[obj.author] += 1;
+            authors[obj.author] +=1;
         } else {
             authors[obj.author] = 1;
         }
