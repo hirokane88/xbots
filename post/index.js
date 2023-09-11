@@ -1,11 +1,12 @@
-const ACCOUNT = "zen"; //zen, stoic, or enfp
+const ACCOUNT = "stoic"; //zen, stoic, or enfp
 const { MongoClient, ObjectId } = require("mongodb");
 const puppeteer = require('puppeteer');
 const { MONGOPASS, XPASS } = require("../config/passwords");
 const days_of_posts = 200;
 const start_date = new Date(); start_date.setDate(start_date.getDate() + 1);
-// const start_date = new Date('2024-05-19');
-const end_date = new Date().setDate(start_date.getDate() + days_of_posts + 1);
+// const start_date = new Date('2024-02-25');
+const end_date = new Date(start_date); end_date.setDate(start_date.getDate() + days_of_posts + 1);
+
 const accounts = {
   zen: { username: "zen_quotes_x", style: "~", hashtag: "zen" },
   stoic: { username: "stoic_quotes_x", style: "-", hashtag: "stoic"},
@@ -58,7 +59,7 @@ async function main() {
     // Type the quote in
     await new Promise(res => setTimeout(res, 1000));
     await page.click("a[aria-label='Post']");
-    await new Promise(res => setTimeout(res, 1000));
+    await new Promise(res => setTimeout(res, 2000));
 
     const document = await collection.findOne();
     const tweet = '"' + document.quote + '" ' + accounts[ACCOUNT].style + " " + document.author + " #" + ACCOUNT + " " + "#" + "quotes" + " ";
@@ -66,7 +67,7 @@ async function main() {
 
     // Schedule post
     await page.click("div[aria-label='Schedule post']");
-    await new Promise(res => setTimeout(res, 1000));
+    await new Promise(res => setTimeout(res, 2000));
     const selects = await page.$$('select');
     const monthSelector = selects[0];
     const daysSelector = selects[1];
@@ -89,13 +90,14 @@ async function main() {
         process.exit(1);
       }
     });
+    await new Promise(res => setTimeout(res, 500));
     await page.evaluate(() => {
       const button = [...document.querySelectorAll('div[role="button"]')].find(btn => btn.innerText.trim() === "Schedule");
       if (button) {
         button.click();
         return true;
       } else {
-        console.error(`${innerText} button not found.`);
+        console.error(`Schedule button not found.`);
         process.exit(1);
       }
     });
