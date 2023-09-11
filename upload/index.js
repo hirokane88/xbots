@@ -1,29 +1,29 @@
 const { MongoClient, ObjectId } = require("mongodb");
 const Twitter = require("twitter-api-v2");
-const password = require("../config/passwords");
+const {MONGOPASS} = require("../config/passwords");
 var zen_quotes = require('./quotes/zen_quotes.json');
 var stoic_quotes = require('./quotes/stoic_quotes.json');
 var enfp_quotes = require('./quotes/enfp_quotes.json');
 
 async function main() {
-    const client = new MongoClient(`mongodb+srv://hirok:${password}@prod.yq6c3n4.mongodb.net/?retryWrites=true&w=majority`);
-    await client.connect();
-    const db = await client.db("quotes");
-    const zen_collection = db.collection("zen");
-    const stoic_collection = db.collection("stoic");
-    const enfp_collection = db.collection("enfp");
-    await zen_collection.deleteMany({});
-    await stoic_collection.deleteMany({});
-    await enfp_collection.deleteMany({});
+    // const client = new MongoClient(`mongodb+srv://hirok:${MONGOPASS}@prod.yq6c3n4.mongodb.net/?retryWrites=true&w=majority`);
+    // await client.connect();
+    // const db = await client.db("quotes");
+    // const zen_collection = db.collection("zen");
+    // const stoic_collection = db.collection("stoic");
+    // const enfp_collection = db.collection("enfp");
+    // await zen_collection.deleteMany({});
+    // await stoic_collection.deleteMany({});
+    // await enfp_collection.deleteMany({});
     zen_quotes = filter_quotes(zen_quotes);
     stoic_quotes = filter_quotes(stoic_quotes);
     enfp_quotes = filter_quotes(enfp_quotes);
-    await upload_quotes(zen_collection, zen_quotes);
-    await upload_quotes(stoic_collection, stoic_quotes);
-    await upload_quotes(enfp_collection, enfp_quotes);
-    // print_quotes(stoic_quotes);
-    // print_authors(stoic_quotes);
-    client.close();
+    // await upload_quotes(zen_collection, zen_quotes);
+    // await upload_quotes(stoic_collection, stoic_quotes);
+    // await upload_quotes(enfp_collection, enfp_quotes);
+    print_quotes(zen_quotes);
+    // print_authors(zen_quotes);
+    // client.close();
     process.exit();
 }
 
@@ -45,7 +45,7 @@ async function upload_quotes(collection, quotes) {
 async function print_quotes(quotes) {
     quotes.forEach(obj => {
         const quote = obj.quote.replace(/\n/g, ' ') + "";
-        console.log('"' + quote + '" ~', obj.author, "#zen\n");
+        console.log('"' + quote + '" ~', obj.author, "\n");
     })
 }
 
